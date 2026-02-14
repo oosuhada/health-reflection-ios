@@ -17,9 +17,12 @@ struct RootView: View {
     }
     
     var body: some View {
-        SwitchStore(self.store) {
-            CaseLet(state: /RootStore.State.home, action: RootStore.Action.home) {
-                HomeView(store: $0)
+        SwitchStore(self.store) { initialState in
+            switch initialState {
+            case .home:
+                CaseLet(/RootStore.State.home, action: RootStore.Action.home) {
+                    HomeView(store: $0)
+                }
             }
         }
     }

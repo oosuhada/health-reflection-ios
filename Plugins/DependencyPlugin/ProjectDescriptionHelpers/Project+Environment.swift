@@ -11,9 +11,9 @@ import ProjectDescription
 public extension Project {
     enum Environment {
         public static let appName = "Pumping"
-        public static let deploymentTarget = DeploymentTarget.iOS(targetVersion: "16.0", devices: [.iphone])
+        public static let deploymentTarget = DeploymentTargets.iOS("16.0")
         public static let bundlePrefix = "com.depromeet.pumping"
         
-        public static let watchDeploymentTarget = DeploymentTarget.watchOS(targetVersion: "9.0")
+        public static let watchDeploymentTarget = DeploymentTargets.watchOS("9.0")
     }
 }

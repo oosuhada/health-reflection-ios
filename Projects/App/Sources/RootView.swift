@@ -17,13 +17,16 @@ struct RootView: View {
     }
     
     var body: some View {
-        SwitchStore(self.store) {
-            CaseLet(state: /RootStore.State.onboarding, action: RootStore.Action.onboarding) {
-                OnboardingRootView(store: $0)
-            }
-            
-            CaseLet(state: /RootStore.State.mainTab, action: RootStore.Action.mainTab) {
-                MainTabView(store: $0)
+        SwitchStore(self.store) { initialState in
+            switch initialState {
+            case .onboarding:
+                CaseLet(/RootStore.State.onboarding, action: RootStore.Action.onboarding) {
+                    OnboardingRootView(store: $0)
+                }
+            case .mainTab:
+                CaseLet(/RootStore.State.mainTab, action: RootStore.Action.mainTab) {
+                    MainTabView(store: $0)
+                }
             }
         }
     }

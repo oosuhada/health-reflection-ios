@@ -16,13 +16,13 @@ public struct TargetFactory {
     var product: Product
     var productName: String?
     var bundleId: String?
-    var deploymentTarget: DeploymentTarget?
+    var deploymentTarget: DeploymentTargets?
     var infoPlist: InfoPlist?
     var sources: SourceFilesList?
     var resources: ResourceFileElements?
     var copyFiles: [CopyFilesAction]?
     var headers: Headers?
-    var entitlements: Path?
+    var entitlements: Entitlements?
     var scripts: [TargetScript]
     var dependencies: [TargetDependency]
     var settings: Settings?
@@ -37,13 +37,13 @@ public struct TargetFactory {
         product: Product = .staticLibrary,
         productName: String? = nil,
         bundleId: String? = nil,
-        deploymentTarget: DeploymentTarget? = nil,
+        deploymentTarget: DeploymentTargets? = nil,
         infoPlist: InfoPlist? = .default,
         sources: SourceFilesList? = .sources,
         resources: ResourceFileElements? = nil,
         copyFiles: [CopyFilesAction]? = nil,
         headers: Headers? = nil,
-        entitlements: Path? = nil,
+        entitlements: Entitlements? = nil,
         scripts: [TargetScript] = [],
         dependencies: [TargetDependency] = [],
         settings: Settings? = nil,
@@ -75,13 +75,14 @@ public struct TargetFactory {
 
 public extension Target {
     private static func make(factory: TargetFactory) -> Self {
-        return .init(
+        let destinations: Destinations = factory.platform == .watchOS ? .watchOS : .iOS
+        return .target(
             name: factory.name,
-            platform: factory.platform,
+            destinations: destinations,
             product: factory.product,
             productName: factory.productName,
             bundleId: factory.bundleId ?? Project.Environment.bundlePrefix + ".\(factory.name)",
-            deploymentTarget: factory.deploymentTarget,
+            deploymentTargets: factory.deploymentTarget,
             infoPlist: factory.infoPlist,
             sources: factory.sources,
             resources: factory.resources,
@@ -92,7 +93,7 @@ public extension Target {
             dependencies: factory.dependencies,
             settings: factory.settings,
             coreDataModels: factory.coreDataModels,
-            environment: factory.environment,
+            environmentVariables: factory.environment.mapValues { .environmentVariable(value: $0, isEnabled: true) },
             launchArguments: factory.launchArguments,
             additionalFiles: factory.additionalFiles
         )
