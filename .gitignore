@@ -120,3 +120,8 @@ Derived/
 *.xcodeproj
 *.p12
 master.key
+
+# Local signing credentials and provisioning profiles
+Tuist/Signing/*.mobileprovision
+Tuist/Signing/*.cer.encrypted
+Tuist/Signing/*.p12.encrypted
