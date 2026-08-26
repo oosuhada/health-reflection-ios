@@ -1,18 +1,20 @@
 # Pumping iOS
 
-운동 선택과 기록, HealthKit, Apple Watch 연동을 포함하는 **Pumping** iOS/watchOS 프로젝트 복원본입니다. 원래 SwiftUI/TCA 화면과 Micro Feature Architecture를 유지하면서 최신 Tuist와 Xcode에서 project graph가 다시 생성·빌드되도록 manifest/API 호환성만 마이그레이션했습니다.
+Pumping은 운동을 선택하고 기록하며 iPhone과 Apple Watch에서 운동 상태를 이어서 확인할 수 있는 iOS/watchOS 애플리케이션입니다.
 
-> 과거 팀 프로젝트의 개인 팀원 정보는 문서에서 제거했습니다. 앱 이름, 운동 선택 UX, HealthKit/watchOS 구조는 원형을 유지했습니다.
+![Pumping app](.github/assets/portfolio/pumping-restored-home.png)
 
-## Restored preview
+## 주요 기능
 
-![Pumping restored app](.github/assets/portfolio/pumping-restored-home.png)
-
-위 이미지는 iPhone 17 Pro Simulator에 복원본을 실제 설치·실행한 뒤 캡처했습니다.
+- 운동 종목 탐색 및 선택
+- 운동 세션 기록과 상태 관리
+- HealthKit 기반 건강·운동 데이터 연동
+- WatchConnectivity 기반 iPhone–Apple Watch 통신
+- SwiftUI와 TCA를 활용한 단방향 상태 관리
 
 ## Architecture
 
-Tuist 기반 Micro Feature Architecture:
+Tuist 기반 Micro Feature Architecture로 기능과 의존성 경계를 분리합니다.
 
 ```text
 Projects/
@@ -24,23 +26,27 @@ Projects/
 └── WatchShared
 ```
 
-Feature/Domain/Core는 interface와 implementation 경계를 나누고, iOS 앱과 watchOS extension이 공유 계층을 통해 연결됩니다.
+Feature, Domain, Core 모듈은 interface와 implementation 계층을 나누며 iOS 앱과 watchOS extension은 공용 계층을 통해 연결됩니다.
 
 ## Stack
 
 - Swift / SwiftUI
-- The Composable Architecture 0.59
+- The Composable Architecture
 - HealthKit
 - WatchConnectivity
-- Tuist 4.205
-- iOS + watchOS
+- Tuist
+- iOS / watchOS
 
-## Generate & build
+## 시작하기
 
 ```bash
 tuist install
 tuist generate --no-open
+```
 
+시뮬레이터 빌드 예시:
+
+```bash
 xcodebuild \
   -workspace Pumping.xcworkspace \
   -scheme Pumping \
@@ -50,13 +56,4 @@ xcodebuild \
   build
 ```
 
-현재 iOS 26.5 + watchOS 26.5 simulator graph까지 포함해 `BUILD SUCCEEDED`를 확인했습니다.
-
-## Modernization scope
-
-- Tuist 3-era manifest API → Tuist 4 API migration
-- Swift Package dependency resolution 복원
-- 현재 TCA 버전의 `SwitchStore` / `CaseLet` API에 맞춘 최소 호환 수정
-- 원래 Workout 화면과 Store 구조 유지
-
-Recovery dashboard나 새로운 개인 건강 로직은 추가하지 않았습니다.
+HealthKit과 Apple Watch 기능을 사용하려면 실행 대상의 capability와 signing 설정이 필요합니다.
